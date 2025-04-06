@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/public/stylesheets/style.css">
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+
+  <% if(nav === true){ %>
+    <div class="fixed w-full z-50 flex justify-center py-5 ">
+      <div class="w-[60vw] px-10 py-3 bg-zinc-800 fixed flex justify-between items-center text-white rounded-full border-1 border-black shadow-xl shadow-grey-500/50">
+        <h3>YourInterest</h3>
+        
+        <div class="flex gap-10 items-center justify-between ">
+          <a href="/profile">Profile</a>
+          <a href="/feed">Feed</a>
+          <form action="/search" method="GET" class="relative">
+            <input
+              type="text"
+              name="q"
+              placeholder="Search users..."
+              class="px-5 py-1  rounded-full bg-zinc-200 text-zinc-800 focus:outline-none"
+              required
+            />
+            <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500">
+              <i class="ri-search-line"></i>
+            </button>
+          </form>
+
+          <a class="px-3 py-1 bg-red-700 text-white rounded-full" href="/logout">Log out</a>
+        </div>
+      </div>
+    </div>
+    
+  
+  <% }%>

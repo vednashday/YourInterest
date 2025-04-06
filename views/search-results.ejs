@@ -1,0 +1,19 @@
+<% include ./partials/header.ejs %>
+
+<div class="min-h-screen bg-zinc-900 text-white px-10 py-25 ">
+  <h1 class="text-2xl font-bold mb-6">Search Results for "<%= query %>"</h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <% users.forEach(user => { %>
+      <a href="/user/<%= user.username %>" class="bg-zinc-800 rounded-xl p-4 flex items-center gap-4 hover:bg-zinc-700 transition">
+        <img src="/images/uploads/<%= user.profileImage %>" alt="<%= user.name %>" class="w-16 h-16 rounded-full object-cover" />
+        <div>
+          <h2 class="text-lg font-semibold"><%= user.name %></h2>
+          <p class="text-sm text-gray-400">@<%= user.username %></p>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<% include ./partials/footer.ejs %>

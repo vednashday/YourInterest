@@ -1,0 +1,90 @@
+<% include ./partials/header.ejs %>
+<div class="profile w-full min-h-screen bg-zinc-800 pt-1">
+    <!-- Hidden Forms -->
+    <form id="uploadform" hidden action="/fileupload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+    </form>
+    <form id="uploadbanner" hidden action="/bannerupload" method="post" enctype="multipart/form-data">
+        <input type="file" name="bannerImage">
+    </form>
+
+    <!-- Profile Header -->
+    <div class="profdets  flex flex-col items-center w-full">
+        <div class="relative w-full h-[70vh] bg-sky-700">
+            <img
+                src="<%= user.bannerImage ? '/images/uploads/' + user.bannerImage : '/images/default-banner.png' %>"
+                alt="Banner image of <%= user.name %>"
+                class="w-full h-full object-cover"
+            />
+
+            <!-- Edit Banner Icon -->
+            <div id="uploadicon2" class="w-15 h-15 absolute text-white top-5 right-5 rounded-full flex items-center justify-center ring-1 backdrop-blur-xl z-20 hover:bg-red-300 transition" title="Edit Banner">
+                <i class="ri-pencil-fill"></i>
+            </div>
+
+            <!-- Profile Image -->
+            <div class="absolute bottom-[-4rem] right-10 w-64 h-64 rounded-full border-4 border-white z-10">
+                <img
+                    src="<%= user.profileImage ? '/images/uploads/' + user.profileImage : '/images/default-profile.jpg' %>"
+                    alt="Profile image of <%= user.name %>"
+                    class="w-full h-full object-cover rounded-full"
+                />
+            </div>
+
+            <!-- Edit Profile Icon -->
+            <div id="uploadicon" class="w-15 h-15 absolute bottom-[-1.5rem] right-10 rounded-full flex items-center justify-center bg-zinc-200 z-20 hover:bg-zinc-300 transition" title="Edit Profile Picture">
+                <i class="ri-pencil-fill"></i>
+            </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-10 mt-20 text-white">
+            <div class="block md:hidden h-32"></div>
+
+            <div class="md:ml-auto text-right">
+                <h1 class="text-3xl font-semibold"><%= user.name %></h1>
+                <h3 class="text-md text-gray-500">@<%= user.username %></h3>
+                <div class="flex gap-3 justify-end mt-4">
+                    <a href="/edit" class="px-5 py-1 bg-zinc-700 rounded-full text-white text-md">Edit</a>
+                    <a href="/add" class="px-5 py-1 bg-red-700 rounded-lg text-white text-sm font-semibold">Add New Post</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Posts Section -->
+    <div class="text-white cards flex flex-wrap gap-10 px-10 mt-10">
+        <div class="card">
+            <div class="w-80 h-60 bg-zinc-0 rounded-lg">
+                <img
+                    class="w-full h-full object-cover rounded-lg"
+                    src="<%= user.posts.length > 0 ? '/images/uploads/' + user.posts[0].image : '/images/default-post.png' %>"
+                    alt="Your uploaded post"
+                />
+            </div>
+            <a href="/show/posts" class="inline-block font-semibold mt-3">Your Uploaded Pins</a>
+            <h5 class="text-sm font-medium opacity-60"><%= user.posts.length %> Pins</h5>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Upload Triggers -->
+<script>
+    document.querySelector("#uploadicon").addEventListener("click", function () {
+        document.querySelector("#uploadform input").click()
+    })
+
+    document.querySelector("#uploadform input").addEventListener("change", function () {
+        document.querySelector("#uploadform").submit()
+    })
+
+    document.querySelector("#uploadicon2").addEventListener("click", function () {
+        document.querySelector("#uploadbanner input").click()
+    })
+
+    document.querySelector("#uploadbanner input").addEventListener("change", function () {
+        document.querySelector("#uploadbanner").submit()
+    })
+</script>
+
+<% include ./partials/footer.ejs %>

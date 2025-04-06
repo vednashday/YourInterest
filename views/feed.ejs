@@ -1,0 +1,49 @@
+<% include ./partials/header.ejs %>
+
+<div class="w-full min-h-screen bg-zinc-800 text-white py-20 ">
+
+  <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-10 space-y-4" id="post-container">
+    <% posts.forEach(function(elem, i){ %>
+      <div class="break-inside-avoid bg-zinc-700 rounded-xl p-3 shadow-md transition-transform hover:scale-105 duration-300 cursor-pointer" onclick="openModal(<%= i %>)">
+        <img class="w-full max-h-80 object-cover rounded-md" src="/images/uploads/<%= elem.image %>" alt="">
+        <h5 class="mt-3 text-lg font-semibold text-white"><%= elem.title %></h5>
+        <h6 class="text-sm text-gray-400">@<%= elem.user.username %></h6>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- MODALS -->
+<% posts.forEach(function(elem, i){ %>
+  <div id="modal-<%= i %>" class="modal-overlay fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-md" onclick="handleOverlayClick(event, <%= i %>)">
+    <div class="modal-content bg-white rounded-xl p-5 max-w-xl w-full relative ">
+      <button class="absolute top-0 right-1 text-xl font-bold text-black" onclick="closeModal(<%= i %>)"><i class="ri-close-large-line"></i></button>
+      <img class="w-full object-contain rounded-lg mb-4" src="/images/uploads/<%= elem.image %>" alt="">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2"><%= elem.title %></h2>
+      <p class="text-gray-600 text-sm mb-1">@<%= elem.user.username %></p>
+      <p class="text-gray-700"><%= elem.description || 'No description provided.' %></p>
+    </div>
+  </div>
+<% }) %>
+
+<script>
+  function openModal(index) {
+    const modal = document.getElementById(`modal-${index}`);
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+  }
+
+  function closeModal(index) {
+    const modal = document.getElementById(`modal-${index}`);
+    modal.classList.remove("flex");
+    modal.classList.add("hidden");
+  }
+  function handleOverlayClick(event, index) {
+    if (event.target.classList.contains("modal-overlay")) {
+      closeModal(index);
+    }
+  }
+  
+</script>
+
+<% include ./partials/footer.ejs %>

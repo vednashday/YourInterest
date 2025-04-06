@@ -1,0 +1,31 @@
+<% include ./partials/header.ejs %>
+
+<div class="w-full h-screen flex items-center justify-center bg-[url(/images/i2.jpg)] bg-center bg-cover bg-no-repeat ">
+    <div class="w-[25vw]  px-15 py-10 rounded-[30px] bg-white shadow-xl" >
+        <h1 class="text-3xl capitalize mb-5 font-semibold text-zinc-700 text-center tracking-tighter leading-none ">Create new Account</h1>
+        <form class="px-4 py-5" action="/register" method="post">
+            <label class="px-2 py-0">Email</label>
+            <input class="border-1 rounded-xl block mb-2 w-full px-3 py-2 bg-white" type="text" name="email" placeholder="Email">
+            <label class="px-2 py-0">Username</label>
+            <input class="border-1 rounded-xl block mb-2 w-full px-3 py-2 bg-white" type="text" name="username" placeholder="Username">
+            <label class="px-2 py-0">Full Name</label>
+            <input class="border-1 rounded-xl block mb-2 w-full px-3 py-2 bg-white" type="text" name="fullname" placeholder="Full Name">
+            <label class="px-2 py-0">Contact No.</label>
+            <input class="border-1 rounded-xl block mb-2 w-full px-3 py-2 bg-white" type="number" name="contact" placeholder="Contact">
+            <label class="px-2 py-0">Password</label>
+            <input class="border-1 rounded-xl block mb-2 w-full px-3 py-2 bg-white" type="password" name="password" placeholder="Password">
+            
+            <input class="border-1 rounded-full block mt-2 text-white w-full px-3 py-1 bg-red-600 rounded-4xl" type="submit" value="Create New Account">
+            
+        </form>
+        <p class="text-zinc-400 text-center text-xs">
+            By continuing, you agree to Pinterest's Terms of Service and acknowledge you've read our Privacy Policy. Notice at collection.
+        </p>
+     
+        <a class="inline-block text-zinc-700 w-full text-xs text-center items-center font-semibold" href="/">Already a member? Log in</a>
+    </div>
+
+</div> 
+
+
+<% include ./partials/footer.ejs %>
