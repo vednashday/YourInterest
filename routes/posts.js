@@ -13,7 +13,15 @@ const postSchema = mongoose.Schema({
   description: {
     type: String
   },
-  image: String
+  image: String,
+  Date:{
+    type:Date,
+    default:Date.now,
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
+  }]
 
 
 });

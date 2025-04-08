@@ -15,7 +15,8 @@ router.post('/register', function(req,res){
     email:req.body.email,
     username:req.body.username,
     name:req.body.fullname,
-    contact:req.body.contact
+    contact:req.body.contact,
+    likedPosts:[]
   })
 
   userModel.register(userData, req.body.password)
@@ -64,6 +65,7 @@ router.get('/profile',isLoggedIn,async function(req, res, next) {
   await userModel
         .findOne({username:req.session.passport.user})
         .populate("posts")
+        .populate("likedPosts")
   res.render('profile', {user, nav: true});
 });
 router.post('/fileupload',isLoggedIn, upload.single("image"), async function(req, res, next) {
@@ -92,7 +94,9 @@ router.post('/createpost',isLoggedIn,upload.single("postimage"),async function(r
     user: user._id,
     title: req.body.title,
     description: req.body.description,
-    image: req.file.filename
+    image: req.file.filename,
+    date: new Date(),
+    likes: []
   })
   user.posts.push(post._id);
   await user.save();
@@ -106,11 +110,19 @@ router.get('/show/posts',isLoggedIn,async function(req, res, next) {
         .populate("posts")
   res.render('show', {user, nav: true});
 });
+
+router.get('/show/liked-posts',isLoggedIn,async function(req, res, next) {
+  const user = 
+  await userModel
+        .findOne({username:req.session.passport.user})
+        .populate("likedPosts")
+  res.render('show-liked', {user, nav: true});
+});
 router.get('/feed',isLoggedIn,async function(req, res, next) {
   const user = await userModel.findOne({username:req.session.passport.user})
   const posts = await postModel.find()
   .populate("user")
-  res.render('feed', {user,posts, nav: true});
+  res.render('feed', {user,posts, currentUser: user, nav: true});
 });
 
 router.get('/search', async (req, res) => {
@@ -194,6 +206,37 @@ router.get('/deletepost/:id', isLoggedIn, async function(req, res) {
   } catch (err) {
     console.error(err);
     res.status(500).send("Error deleting post");
+  }
+});
+
+router.post('/like/:id',isLoggedIn, async (req, res) => {
+  try {
+    const post = await postModel.findById(req.params.id);
+    const userId = req.user._id; 
+    const postId = post._id;
+    const user = await userModel.findOne({ username: req.session.passport.user });
+
+    if (!post) return res.status(404).json({ message: "Post not found" });
+
+    const alreadyLiked = post.likes.includes(userId);
+
+    if (alreadyLiked) {
+      post.likes.pull(userId);
+      user.likedPosts.pull(postId);
+    } else {
+      post.likes.push(userId); 
+      user.likedPosts.push(postId);
+    }
+    await post.save();
+    await user.save();
+    
+
+    
+
+    res.status(200).json({ likes: post.likes.length, liked: !alreadyLiked });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 

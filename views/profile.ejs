@@ -1,6 +1,6 @@
 <% include ./partials/header.ejs %>
-<div class="profile w-full min-h-screen bg-zinc-800 pt-1">
-    <!-- Hidden Forms -->
+<div class="profile w-full min-h-screen bg-zinc-800">
+  
     <form id="uploadform" hidden action="/fileupload" method="post" enctype="multipart/form-data">
         <input type="file" name="image">
     </form>
@@ -8,36 +8,37 @@
         <input type="file" name="bannerImage">
     </form>
 
-    <!-- Profile Header -->
+
     <div class="profdets  flex flex-col items-center w-full">
-        <div class="relative w-full h-[70vh] bg-sky-700">
+        <div class="relative w-full h-[45vh] bg-sky-700">
             <img
                 src="<%= user.bannerImage ? '/images/uploads/' + user.bannerImage : '/images/default-banner.png' %>"
                 alt="Banner image of <%= user.name %>"
                 class="w-full h-full object-cover"
             />
 
-            <!-- Edit Banner Icon -->
-            <div id="uploadicon2" class="w-15 h-15 absolute text-white top-5 right-5 rounded-full flex items-center justify-center ring-1 backdrop-blur-xl z-20 hover:bg-red-300 transition" title="Edit Banner">
+           
+            <div id="uploadicon2" class="w-15 h-15  absolute text-white top-5 right-5 rounded-full flex items-center justify-center ring-1 backdrop-blur-xl z-20 hover:bg-red-100 transition" title="Edit Banner">
                 <i class="ri-pencil-fill"></i>
             </div>
 
-            <!-- Profile Image -->
-            <div class="absolute bottom-[-4rem] right-10 w-64 h-64 rounded-full border-4 border-white z-10">
+      
+            <div class="bottom-[-4rem] right-10 absolute w-64 h-64 rounded-full border-4 border-white z-10">
                 <img
                     src="<%= user.profileImage ? '/images/uploads/' + user.profileImage : '/images/default-profile.jpg' %>"
                     alt="Profile image of <%= user.name %>"
                     class="w-full h-full object-cover rounded-full"
                 />
             </div>
+          
+            
 
-            <!-- Edit Profile Icon -->
+         
             <div id="uploadicon" class="w-15 h-15 absolute bottom-[-1.5rem] right-10 rounded-full flex items-center justify-center bg-zinc-200 z-20 hover:bg-zinc-300 transition" title="Edit Profile Picture">
                 <i class="ri-pencil-fill"></i>
             </div>
         </div>
 
-        <!-- User Info -->
         <div class="w-full flex flex-col md:flex-row justify-between items-start md:items-end px-10 mt-20 text-white">
             <div class="block md:hidden h-32"></div>
 
@@ -52,7 +53,7 @@
         </div>
     </div>
 
-    <!-- User Posts Section -->
+ <div class="flex flex-row ">
     <div class="text-white cards flex flex-wrap gap-10 px-10 mt-10">
         <div class="card">
             <div class="w-80 h-60 bg-zinc-0 rounded-lg">
@@ -66,9 +67,24 @@
             <h5 class="text-sm font-medium opacity-60"><%= user.posts.length %> Pins</h5>
         </div>
     </div>
-</div>
 
-<!-- JavaScript for Upload Triggers -->
+    <div class="text-white cards flex flex-wrap gap-10 px-10 mt-10">
+        <div class="card">
+            <div class="w-80 h-60 bg-zinc-0 rounded-lg">
+                <img
+                    class="w-full h-full object-cover rounded-lg"
+                    src="<%= user.likedPosts.length > 0 ? '/images/uploads/' + user.likedPosts[0].image : '/images/default-post.png' %>"
+                    alt="Your uploaded post"
+                />
+            </div>
+            <a href="/show/liked-posts" class="inline-block font-semibold mt-3">Your Liked Pins</a>
+            <h5 class="text-sm font-medium opacity-60"><%= user.likedPosts.length %> Pins</h5>
+        </div>
+    </div>
+</div>
+ </div>
+    
+
 <script>
     document.querySelector("#uploadicon").addEventListener("click", function () {
         document.querySelector("#uploadform input").click()
