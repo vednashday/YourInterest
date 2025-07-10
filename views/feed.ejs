@@ -5,7 +5,7 @@
   <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 p-10 space-y-4" id="post-container">
     <% posts.forEach(function(elem, i){ %>
       <div class="break-inside-avoid bg-zinc-700 rounded-xl p-3 shadow-md transition-transform hover:scale-105 duration-300 cursor-pointer" onclick="openModal(<%= i %>)">
-        <img class="w-full  object-cover rounded-md" src="/images/uploads/<%= elem.image %>" alt="">
+        <img class="w-full  object-cover rounded-md" src="<%= elem.image %>" alt="">
         <h5 class="mt-3 text-lg font-semibold text-white break-words text-wrap overflow-hidden"><%= elem.title %></h5>
         <h6 class="text-sm text-gray-400">@<%= elem.user.username %></h6>
         <p class="text-xs text-gray-400"><%= elem.likes.length %> likes</p>
@@ -19,7 +19,7 @@
   <div id="modal-<%= i %>" class="modal-overlay fixed inset-0 z-50 hidden items-center justify-center backdrop-blur-md" onclick="handleOverlayClick(event, <%= i %>)">
     <div class="modal-content bg-white rounded-xl p-5 relative  max-w-xl max-h-[90vh] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent p-2">
       <button class="absolute top-0 right-1 text-xl font-bold text-black" onclick="closeModal(<%= i %>)"><i class="ri-close-large-line"></i></button>
-      <img class="w-[100%] max-h-[70vh] object-contain rounded-lg mb-4" src="/images/uploads/<%= elem.image %>" alt="">
+      <img class="w-[100%] max-h-[70vh] object-contain rounded-lg mb-4" src="<%= elem.image %>" alt="">
       <% if (elem.Date) { %>
         <p class="text-gray-400 text-xs mb-2">
           <%= new Date(elem.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
@@ -33,13 +33,9 @@
       <div class="flex items-center gap-2 mb-3">
         <button id="like-btn-<%= i %>" class="text-xl hover:scale-110 transition" onclick="likePost('<%= elem._id %>', <%= i %>)">
           <i id="like-icon-<%= i %>" class="<%= elem.likes.map(id => id.toString()).includes(currentUser._id.toString()) ? 'ri-heart-fill text-red-500' : 'ri-heart-line' %>"></i>
-
         </button>
         <span id="like-count-<%= i %>" class="text-gray-600 text-sm"><%= elem.likes.length %> likes</span>
-
       </div>
-      
-      
     </div>
   </div>
 <% }) %>
@@ -56,37 +52,36 @@
     modal.classList.remove("flex");
     modal.classList.add("hidden");
   }
+
   function handleOverlayClick(event, index) {
     if (event.target.classList.contains("modal-overlay")) {
       closeModal(index);
     }
   }
+
   async function likePost(postId, index) {
-  try {
-    const res = await fetch(`/like/${postId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
+    try {
+      const res = await fetch(`/like/${postId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-    const data = await res.json();
-    document.getElementById(`like-count-${index}`).innerText = `${data.likes} likes`;
+      const data = await res.json();
+      document.getElementById(`like-count-${index}`).innerText = `${data.likes} likes`;
 
-    // ✅ Correct icon reference
-    const icon = document.getElementById(`like-icon-${index}`);
+      const icon = document.getElementById(`like-icon-${index}`);
+      if (data.liked) {
+        icon.classList.remove("ri-heart-line");
+        icon.classList.add("ri-heart-fill", "text-red-500");
+      } else {
+        icon.classList.remove("ri-heart-fill", "text-red-500");
+        icon.classList.add("ri-heart-line");
+      }
 
-    if (data.liked) {
-      icon.classList.remove("ri-heart-line");
-      icon.classList.add("ri-heart-fill", "text-red-500");
-    } else {
-      icon.classList.remove("ri-heart-fill", "text-red-500");
-      icon.classList.add("ri-heart-line");
+    } catch (err) {
+      console.error("Error liking post:", err);
     }
-
-  } catch (err) {
-    console.error("Error liking post:", err);
   }
-}
-
 </script>
 
 <% include ./partials/footer.ejs %>

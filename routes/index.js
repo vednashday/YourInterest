@@ -1,10 +1,11 @@
 var express = require('express');
 const passport = require('passport');
 var router = express.Router();
-const userModel = require('./users');
-const postModel = require("./posts");
+const userModel = require('../Models/users');
+const postModel = require("../Models/posts");
 const localStrategy = require("passport-local");
-const upload = require('./multer');
+const upload = require('../uploadMiddleware');
+
 
 
 passport.use(new localStrategy(userModel.authenticate()));
@@ -68,40 +69,42 @@ router.get('/profile',isLoggedIn,async function(req, res, next) {
         .populate("likedPosts")
   res.render('profile', {user, nav: true});
 });
-router.post('/fileupload',isLoggedIn, upload.single("image"), async function(req, res, next) {
-  const user = await userModel.findOne({username:req.session.passport.user})
-  user.profileImage = req.file.filename;
+router.post('/fileupload', isLoggedIn, upload.single("image"), async function(req, res) {
+  const user = await userModel.findOne({ username: req.session.passport.user });
+  user.profileImage = req.file.path; // ✅ Cloudinary URL
   await user.save();
   res.redirect('/profile');
-
 });
-router.post('/bannerupload',isLoggedIn, upload.single("bannerImage"), async function(req, res, next) {
-  const user = await userModel.findOne({username:req.session.passport.user})
-  user.bannerImage = req.file.filename;
+router.post('/bannerupload', isLoggedIn, upload.single("bannerImage"), async function(req, res) {
+  const user = await userModel.findOne({ username: req.session.passport.user });
+  user.bannerImage = req.file.path; // ✅ Cloudinary URL
   await user.save();
   res.redirect('/profile');
-
 });
+
 
 router.get('/add',isLoggedIn,async function(req, res, next) {
   const user = await userModel.findOne({username:req.session.passport.user})
   res.render('add', {user, nav: true});
 });
 
-router.post('/createpost',isLoggedIn,upload.single("postimage"),async function(req, res, next) {
-  const user = await userModel.findOne({username:req.session.passport.user})
+router.post('/createpost', isLoggedIn, upload.single("image"), async function(req, res) {
+  const user = await userModel.findOne({ username: req.session.passport.user });
+
   const post = await postModel.create({
     user: user._id,
     title: req.body.title,
     description: req.body.description,
-    image: req.file.filename,
+    image: req.file?.path, // ✅ Cloudinary URL
     date: new Date(),
     likes: []
-  })
+  });
+
   user.posts.push(post._id);
   await user.save();
   res.redirect("/profile");
 });
+
 
 router.get('/show/posts',isLoggedIn,async function(req, res, next) {
   const user = 
